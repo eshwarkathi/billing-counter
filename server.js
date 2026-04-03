@@ -13,9 +13,9 @@ const DB_PATH = process.env.NODE_ENV === 'production' && process.env.RENDER === 
   : path.join(__dirname, 'db.json');
 
 // Ensure data directory exists in production
-if (!fs.existsSync(path.dirname(DB_PATH))) {
-  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-}
+//if (!fs.existsSync(path.dirname(DB_PATH))) {
+ // fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+//}
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -26,9 +26,9 @@ function readDB() {
   return JSON.parse(raw);
 }
 
-function writeDB(data) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
-}
+//function writeDB(data) {
+  //fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+//}
 
 app.get('/api/customers', (req, res) => {
   const db = readDB();
