@@ -1,0 +1,55 @@
+{
+  "customers": [
+    {
+      "id": 1775201856043,
+      "name": "eshwao",
+      "mobile": "7418529630",
+      "area": "fsg",
+      "refer": "fdg",
+      "createdAt": "2026-04-03T07:37:36.043Z",
+      "updatedAt": "2026-04-03T07:52:15.088Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1775201856120,
+      "customerId": 1775201856043,
+      "amount": 741,
+      "type": "DEPOSIT",
+      "payment": "ONLINE",
+      "timestamp": "2026-04-03T07:37:36.120Z"
+    },
+    {
+      "id": 1775202218853,
+      "customerId": 1775201856043,
+      "amount": 741,
+      "type": "DEPOSIT",
+      "payment": "ONLINE",
+      "timestamp": "2026-04-03T07:43:38.853Z"
+    },
+    {
+      "id": 1775202369763,
+      "customerId": 1775201856043,
+      "amount": 741,
+      "type": "DEPOSIT",
+      "payment": "ONLINE",
+      "timestamp": "2026-04-03T07:46:09.763Z"
+    },
+    {
+      "id": 1775202525493,
+      "customerId": 1775201856043,
+      "amount": 741,
+      "type": "DEPOSIT",
+      "payment": "ONLINE",
+      "timestamp": "2026-04-03T07:48:45.493Z"
+    },
+    {
+      "id": 1775202735100,
+      "customerId": 1775201856043,
+      "amount": 741,
+      "type": "DEPOSIT",
+      "payment": "ONLINE",
+      "timestamp": "2026-04-03T07:52:15.100Z"
+    }
+  ]
+}

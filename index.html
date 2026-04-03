@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Billing Counter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Billing Counter System</h1>
+
+    <!-- UNIFIED CUSTOMER & TRANSACTION FORM -->
+    <div class="card">
+        <h2>Add Customer & Transaction</h2>
+
+        <div class="unified-form">
+            <h3>Customer Information</h3>
+            <div class="form-row">
+                <input id="name" placeholder="Customer Name" list="customerNames" required>
+                <datalist id="customerNames"></datalist>
+                <input id="mobile" placeholder="Mobile Number" required>
+            </div>
+            <div class="form-row">
+                <input id="area" placeholder="Area">
+                <input id="refer" placeholder="Referred By" list="referNames">
+                <datalist id="referNames"></datalist>
+            </div>
+
+            <h3>Transaction Details</h3>
+            <div class="form-row">
+                <input id="amount" placeholder="Amount" required>
+                <select id="type" required>
+                    <option value="DEPOSIT">Deposit</option>
+                    <option value="CASHOUT">Cashout</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <select id="payment" required>
+                    <option value="ONLINE">Online</option>
+                    <option value="OFFLINE">Offline</option>
+                </select>
+            </div>
+
+            <button onclick="addCustomerAndTransaction()" class="unified-btn">Add Customer & Transaction</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="card">
+        <h2>Dashboard</h2>
+        <div class="dashboard-grid">
+            <a href="cash-in.html" class="stat" style="text-decoration: none; cursor: pointer;">
+                <h3>Total Cash In</h3>
+                <p>₹<span id="cashIn">0</span></p>
+            </a>
+            <a href="cash-out.html" class="stat" style="text-decoration: none; cursor: pointer;">
+                <h3>Total Cash Out</h3>
+                <p>₹<span id="cashOut">0</span></p>
+            </a>
+            <div class="stat">
+                <h3>Balance</h3>
+                <p>₹<span id="balance">0</span></p>
+            </div>
+            <div class="stat">
+                <h3>Online Payments</h3>
+                <p>₹<span id="onlinePayments">0</span></p>
+            </div>
+            <div class="stat">
+                <h3>Offline Payments</h3>
+                <p>₹<span id="offlinePayments">0</span></p>
+            </div>
+            <div class="stat">
+                <h3>Total Transactions</h3>
+                <p><span id="totalTransactions">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+        <h2>Customers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Area</th>
+                    <th>Refer</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="customerTable"></tbody>
+        </table>
+    </div>
+
+    <!-- BILLING DETAILS -->
+    <div class="card">
+        <h2>Billing Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="billingTable"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

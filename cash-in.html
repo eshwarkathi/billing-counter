@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash In (Deposits) - Billing Counter</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cash-in-badge {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .stat-highlight {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-highlight h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .stat-highlight p {
+            margin: 10px 0 0 0;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        <h1 style="color: white; margin: 0;"><span class="cash-in-badge">CASH IN (DEPOSITS)</span></h1>
+    </div>
+
+    <!-- STAT -->
+    <div class="stat-highlight">
+        <h2>Total Deposits</h2>
+        <p>₹<span id="totalCashIn">0</span></p>
+    </div>
+
+    <!-- PAYMENT METHOD BREAKDOWN -->
+    <div class="dashboard-grid" style="margin-bottom: 30px;">
+        <div class="stat" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h3>Online Deposits</h3>
+            <p>₹<span id="onlineDeposits">0</span></p>
+        </div>
+        <div class="stat" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            <h3>Offline Deposits</h3>
+            <p>₹<span id="offlineDeposits">0</span></p>
+        </div>
+    </div>
+
+    <!-- DEPOSITS TABLE -->
+    <div class="card">
+        <h2>Deposit Transactions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Mobile</th>
+                    <th>Area</th>
+                    <th>Referred By</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="depositsTable"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let customers = [];
+        let transactions = [];
+
+        async function initPage() {
+            await loadData();
+            updateDatalists();
+            renderDeposits();
+        }
+
+        function renderDeposits() {
+            const table = document.getElementById("depositsTable");
+            table.innerHTML = "";
+
+            const deposits = transactions.filter(t => t.type === "DEPOSIT");
+            let totalDeposits = 0;
+            let onlineDeposits = 0;
+            let offlineDeposits = 0;
+
+            deposits.forEach((t, index) => {
+                const customer = customers.find(c => c.id === t.customerId);
+                const date = new Date(t.timestamp).toLocaleString();
+                totalDeposits += t.amount;
+                if (t.payment === "ONLINE") {
+                    onlineDeposits += t.amount;
+                } else {
+                    offlineDeposits += t.amount;
+                }
+
+                table.innerHTML += `
+                    <tr>
+                        <td>${customer ? customer.name : 'Unknown'}</td>
+                        <td>${customer ? customer.mobile : '-'}</td>
+                        <td>${customer ? customer.area : '-'}</td>
+                        <td>${customer ? customer.refer : '-'}</td>
+                        <td>₹${t.amount}</td>
+                        <td>${t.payment}</td>
+                        <td>${date}</td>
+                        <td><button onclick="deleteTransaction(${index})" class="delete-btn">Delete</button></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("totalCashIn").innerText = totalDeposits.toFixed(2);
+            document.getElementById("onlineDeposits").innerText = onlineDeposits.toFixed(2);
+            document.getElementById("offlineDeposits").innerText = offlineDeposits.toFixed(2);
+        }
+
+
+
+        function deleteTransaction(index) {
+            const deposits = transactions.filter(t => t.type === "DEPOSIT");
+            if (confirm("Delete this deposit?")) {
+                const depositToDelete = deposits[index];
+                const fullIndex = transactions.indexOf(depositToDelete);
+                transactions.splice(fullIndex, 1);
+                saveData();
+                renderDeposits();
+            }
+        }
+
+        initPage();
+    </script>
+</body>
+</html>

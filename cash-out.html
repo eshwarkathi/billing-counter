@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Out (Withdrawals) - Billing Counter</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cash-out-badge {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .stat-highlight {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-highlight h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .stat-highlight p {
+            margin: 10px 0 0 0;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        <h1 style="color: white; margin: 0;"><span class="cash-out-badge">CASH OUT (WITHDRAWALS)</span></h1>
+    </div>
+
+    <!-- STAT -->
+    <div class="stat-highlight">
+        <h2>Total Withdrawals</h2>
+        <p>₹<span id="totalCashOut">0</span></p>
+    </div>
+
+    <!-- PAYMENT METHOD BREAKDOWN -->
+    <div class="dashboard-grid" style="margin-bottom: 30px;">
+        <div class="stat" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h3>Online Withdrawals</h3>
+            <p>₹<span id="onlineWithdrawals">0</span></p>
+        </div>
+        <div class="stat" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            <h3>Offline Withdrawals</h3>
+            <p>₹<span id="offlineWithdrawals">0</span></p>
+        </div>
+    </div>
+
+    <!-- CASHOUT TABLE -->
+    <div class="card">
+        <h2>Withdrawal Transactions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Mobile</th>
+                    <th>Area</th>
+                    <th>Referred By</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cashoutTable"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let customers = [];
+        let transactions = [];
+
+        async function initPage() {
+            await loadData();
+            updateDatalists();
+            renderCashouts();
+        }
+
+        function renderCashouts() {
+            const table = document.getElementById("cashoutTable");
+            table.innerHTML = "";
+
+            const cashouts = transactions.filter(t => t.type === "CASHOUT");
+            let totalCashouts = 0;
+            let onlineWithdrawals = 0;
+            let offlineWithdrawals = 0;
+
+            cashouts.forEach((t, index) => {
+                const customer = customers.find(c => c.id === t.customerId);
+                const date = new Date(t.timestamp).toLocaleString();
+                totalCashouts += t.amount;
+                if (t.payment === "ONLINE") {
+                    onlineWithdrawals += t.amount;
+                } else {
+                    offlineWithdrawals += t.amount;
+                }
+
+                table.innerHTML += `
+                    <tr>
+                        <td>${customer ? customer.name : 'Unknown'}</td>
+                        <td>${customer ? customer.mobile : '-'}</td>
+                        <td>${customer ? customer.area : '-'}</td>
+                        <td>${customer ? customer.refer : '-'}</td>
+                        <td>₹${t.amount}</td>
+                        <td>${t.payment}</td>
+                        <td>${date}</td>
+                        <td><button onclick="deleteTransaction(${index})" class="delete-btn">Delete</button></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("totalCashOut").innerText = totalCashouts.toFixed(2);
+            document.getElementById("onlineWithdrawals").innerText = onlineWithdrawals.toFixed(2);
+            document.getElementById("offlineWithdrawals").innerText = offlineWithdrawals.toFixed(2);
+        }
+
+
+
+        function deleteTransaction(index) {
+            const cashouts = transactions.filter(t => t.type === "CASHOUT");
+            if (confirm("Delete this withdrawal?")) {
+                const cashoutToDelete = cashouts[index];
+                const fullIndex = transactions.indexOf(cashoutToDelete);
+                transactions.splice(fullIndex, 1);
+                saveData();
+                renderCashouts();
+            }
+        }
+
+        initPage();
+    </script>
+</body>
+</html>
